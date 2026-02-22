@@ -1,37 +1,53 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const Navbar = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.05], [0, 1]);
+
   return (
     <motion.nav
+      ref={ref}
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      className="fixed top-0 left-0 right-0 z-50 glass-surface"
+      transition={{ duration: 1, delay: 0.3 }}
+      className="fixed top-0 left-0 right-0 z-50"
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <motion.div
+        className="absolute inset-0 glass"
+        style={{ opacity: bgOpacity }}
+      />
+      <div className="relative max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         <a href="/" className="font-display text-xl font-bold tracking-tight text-foreground">
-          <span className="text-gradient-gold">NEXUS</span>
-          <span className="text-muted-foreground font-light ml-1">studio</span>
+          NEXUS
+          <span className="text-muted-foreground font-light tracking-wider text-sm ml-1.5">STUDIO</span>
         </a>
 
-        <div className="hidden md:flex items-center gap-8">
-          {["Usługi", "Realizacje", "Proces", "Kontakt"].map((item) => (
-            <a
+        <div className="hidden md:flex items-center gap-10">
+          {["Usługi", "Realizacje", "Proces", "Kontakt"].map((item, i) => (
+            <motion.a
               key={item}
               href={`#${item.toLowerCase()}`}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 line-reveal pb-1"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + i * 0.1 }}
+              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors duration-500 tracking-widest uppercase line-reveal pb-0.5"
             >
               {item}
-            </a>
+            </motion.a>
           ))}
         </div>
 
-        <a
+        <motion.a
           href="#kontakt"
-          className="hidden md:inline-flex px-5 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="hidden md:inline-flex px-5 py-2.5 rounded-full text-xs font-medium tracking-wider uppercase glass glass-hover text-foreground transition-all duration-500"
         >
-          Rozpocznij projekt
-        </a>
+          Kontakt
+        </motion.a>
       </div>
     </motion.nav>
   );

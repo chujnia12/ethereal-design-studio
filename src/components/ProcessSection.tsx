@@ -1,60 +1,64 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 const steps = [
-  { num: "01", title: "Discovery", desc: "Poznajemy Twój biznes, cele i użytkowników. Definiujemy strategię." },
-  { num: "02", title: "Design", desc: "Wireframe'y, prototypy, testy użyteczności. Iterujemy do perfekcji." },
-  { num: "03", title: "Development", desc: "Czyste, wydajne kodowanie z CI/CD i code review na każdym kroku." },
-  { num: "04", title: "Launch", desc: "Wdrożenie, monitoring, optymalizacja. Nie kończymy na deploy'u." },
+  { num: "01", title: "Discovery", desc: "Zrozumienie biznesu, celów i użytkowników. Audyt, strategia, plan." },
+  { num: "02", title: "Design", desc: "Wireframe'y, prototypy high-fidelity, testy z użytkownikami. Iteracja." },
+  { num: "03", title: "Build", desc: "Clean code, CI/CD, code review. Pixel-perfect implementacja." },
+  { num: "04", title: "Launch & Scale", desc: "Wdrożenie, monitoring, A/B testy. Ciągła optymalizacja." },
 ];
 
 const ProcessSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  const yParallax = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
-    <section id="proces" className="relative py-32 px-6" ref={ref}>
-      <div className="max-w-5xl mx-auto">
+    <section id="proces" className="relative py-40 px-6 noise" ref={containerRef}>
+      <motion.div style={{ y: yParallax }} className="max-w-6xl mx-auto" ref={ref}>
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.9 }}
+          className="mb-24"
         >
-          <span className="text-sm text-primary tracking-widest uppercase font-medium">Proces</span>
-          <h2 className="font-display text-4xl sm:text-6xl font-bold mt-4 text-gradient-light">
+          <span className="text-[11px] text-muted-foreground tracking-[0.4em] uppercase font-medium block mb-4">
+            Proces
+          </span>
+          <h2 className="font-display text-5xl sm:text-7xl font-bold tracking-tighter text-gradient-white">
             Jak pracujemy
           </h2>
         </motion.div>
 
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-primary/20 to-transparent" />
-
-          <div className="space-y-16">
-            {steps.map((step, i) => (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.7, delay: i * 0.15 }}
-                className={`relative flex items-start gap-8 ${
-                  i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
-              >
-                {/* Dot */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary gold-glow z-10" />
-
-                <div className={`ml-16 md:ml-0 md:w-1/2 ${i % 2 === 0 ? "md:pr-16 md:text-right" : "md:pl-16"}`}>
-                  <span className="font-display text-5xl font-bold text-primary/20">{step.num}</span>
-                  <h3 className="font-display text-2xl font-bold mt-2 text-foreground">{step.title}</h3>
-                  <p className="text-muted-foreground mt-2 leading-relaxed">{step.desc}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+          {steps.map((step, i) => (
+            <motion.div
+              key={step.num}
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: i * 0.12 }}
+              className="group relative p-10 sm:p-12 rounded-2xl glass glass-hover transition-all duration-700"
+            >
+              <span className="font-display text-7xl font-bold text-foreground/[0.03] absolute top-6 right-8 select-none">
+                {step.num}
+              </span>
+              <div className="relative z-10">
+                <div className="flex items-baseline gap-4 mb-4">
+                  <span className="text-[11px] text-muted-foreground tracking-[0.3em] font-medium">{step.num}</span>
+                  <div className="h-px flex-1 bg-border group-hover:bg-foreground/20 transition-colors duration-700" />
                 </div>
-              </motion.div>
-            ))}
-          </div>
+                <h3 className="font-display text-2xl font-bold text-foreground tracking-tight mb-3">{step.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

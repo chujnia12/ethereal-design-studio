@@ -51,13 +51,8 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          dim: "hsl(var(--gold-dim))",
-          glow: "hsl(var(--gold-glow))",
-        },
         surface: {
-          glass: "hsl(var(--surface-glass))",
+          glass: "hsla(var(--surface-glass), 0.04)",
           elevated: "hsl(var(--surface-elevated))",
         },
         sidebar: {
@@ -97,10 +92,6 @@ export default {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-20px)" },
         },
-        "pulse-gold": {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "1" },
-        },
         "spin-slow": {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
@@ -112,7 +103,6 @@ export default {
         "fade-up": "fade-up 0.8s ease-out forwards",
         "fade-in": "fade-in 1s ease-out forwards",
         float: "float 6s ease-in-out infinite",
-        "pulse-gold": "pulse-gold 3s ease-in-out infinite",
         "spin-slow": "spin-slow 20s linear infinite",
       },
     },
